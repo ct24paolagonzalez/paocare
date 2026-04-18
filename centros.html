@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathCare – Centros de Salud</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #a06cd5;
+    --purple-light: #c77dff;
+    --pink: #f7a8b8;
+    --pink-deep: #ff6f91;
+    --green: #70c1b3;
+    --bg: linear-gradient(135deg, #f7d6e0, #e6ccff);
+    --card-bg: rgba(255,255,255,0.88);
+    --text: #3d3450;
+    --muted: #7a6e88;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* NAVBAR */
+  .navbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 25px;
+    background: linear-gradient(90deg, #a06cd5, #c77dff);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 20px;
+    margin-right: 4px;
+  }
+
+  .navbar h2 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 28px 20px 40px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    background: linear-gradient(135deg, #b388eb, #f7a8b8);
+    border-radius: 22px;
+    padding: 28px 30px;
+    color: white;
+    margin-bottom: 24px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.13);
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+    margin-bottom: 6px;
+  }
+
+  .page-header p {
+    opacity: 0.92;
+    font-size: 14px;
+  }
+
+  /* FILTERS */
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .filter-btn {
+    padding: 8px 18px;
+    border-radius: 20px;
+    border: 2px solid #c77dff;
+    background: white;
+    color: #a06cd5;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .filter-btn.active, .filter-btn:hover {
+    background: linear-gradient(135deg, #a06cd5, #c77dff);
+    color: white;
+    border-color: transparent;
+  }
+
+  /* SEARCH */
+  .search-bar {
+    position: relative;
+    margin-bottom: 22px;
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 13px 18px 13px 44px;
+    border-radius: 15px;
+    border: none;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    outline: none;
+    color: var(--text);
+  }
+
+  .search-bar input:focus {
+    box-shadow: 0 4px 15px rgba(160,108,213,0.25);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #c77dff;
+  }
+
+  /* CENTRO CARD */
+  .centro-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .centro-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(160,108,213,0.15);
+  }
+
+  .centro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+
+  .centro-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--purple);
+  }
+
+  .pin-icon {
+    color: var(--pink-deep);
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .tags {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .tag {
+    padding: 4px 12px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .tag-hospital { background: #e8d5ff; color: #7b2fbe; }
+  .tag-clinica  { background: #d5f0eb; color: #1a8a77; }
+  .tag-ciudad   { background: #f0f0f0; color: #555; }
+  .tag-mamo     { background: #2ecc71; color: white; }
+  .tag-gratuito { background: #ff6f91; color: white; }
+
+  .centro-info {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-row span.icon { font-size: 15px; }
+
+  .info-row a {
+    color: var(--purple);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .servicios-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .servicios {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .servicio-tag {
+    padding: 4px 12px;
+    border-radius: 10px;
+    border: 1.5px solid #e0c8f8;
+    font-size: 11px;
+    color: #a06cd5;
+    background: #faf5ff;
+  }
+
+  .centro-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .btn-dir {
+    flex: 1;
+    padding: 11px;
+    border-radius: 12px;
+    border: 2px solid #e0d0f0;
+    background: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+
+  .btn-dir:hover {
+    border-color: #a06cd5;
+    color: #a06cd5;
+  }
+
+  .btn-call {
+    flex: 1;
+    padding: 11px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #ff6f91, #f7a8b8);
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+
+  .btn-call:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  /* BANNER DETECCION */
+  .banner {
+    background: #eef4ff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #a06cd5;
+  }
+
+  .banner strong {
+    display: block;
+    color: var(--text);
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+  .banner p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* COUNT */
+  .result-count {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    font-weight: 500;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <a href="app.html">←</a>
+  <h2>PathCare</h2>
+</header>
+
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>🏥 Centros de Salud</h1>
+    <p>Encuentra hospitales y clínicas con mamografía disponible en Panamá</p>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar por nombre o provincia…" oninput="filterCentros()">
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('todos', this)">Todos</button>
+    <button class="filter-btn" onclick="setFilter('hospital', this)">Hospitales</button>
+    <button class="filter-btn" onclick="setFilter('clinica', this)">Clínicas</button>
+    <button class="filter-btn" onclick="setFilter('panama', this)">Ciudad de Panamá</button>
+    <button class="filter-btn" onclick="setFilter('interior', this)">Interior</button>
+    <button class="filter-btn" onclick="setFilter('gratuito', this)">Gratuito</button>
+  </div>
+
+  <!-- BANNER -->
+  <div class="banner">
+    <strong>📅 Campaña de detección gratuita</strong>
+    <p>Durante octubre (Mes de la Concientización del Cáncer de Mama), muchos centros ofrecen mamografías gratuitas. Consulta directamente con el centro.</p>
+  </div>
+
+  <!-- COUNT -->
+  <div class="result-count" id="resultCount">Mostrando 6 centros</div>
+
+  <!-- CARDS -->
+  <div id="centrosList">
+
+    <div class="centro-card" data-tipo="hospital" data-region="panama" data-name="Instituto Oncológico Nacional">
+      <div class="centro-header">
+        <span class="centro-name">Instituto Oncológico Nacional</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-hospital">Hospital</span>
+        <span class="tag tag-ciudad">Panamá</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Av. Cuba, Ciudad de Panamá</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:5126600">512-6600</a></div>
+        <div class="info-row"><span class="icon">🕐</span> Lun-Vie: 7:00 AM – 5:00 PM</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Oncología</span>
+        <span class="servicio-tag">Quimioterapia</span>
+        <span class="servicio-tag">Radioterapia</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Instituto Oncológico Nacional, Av Cuba, Ciudad de Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:5126600'">📞 Llamar</button>
+      </div>
+    </div>
+
+    <div class="centro-card" data-tipo="hospital" data-region="panama" data-name="Hospital Santo Tomás">
+      <div class="centro-header">
+        <span class="centro-name">Hospital Santo Tomás</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-hospital">Hospital</span>
+        <span class="tag tag-ciudad">Panamá</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Av. Balboa, Ciudad de Panamá</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:5036700">503-6700</a></div>
+        <div class="info-row"><span class="icon">🕐</span> Lun-Vie: 7:00 AM – 4:00 PM</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Ginecología</span>
+        <span class="servicio-tag">Medicina Interna</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Hospital Santo Tomás, Av Balboa, Ciudad de Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:5036700'">📞 Llamar</button>
+      </div>
+    </div>
+
+    <div class="centro-card" data-tipo="clinica" data-region="panama" data-name="CSS Policlínica Don Bosco">
+      <div class="centro-header">
+        <span class="centro-name">CSS Policlínica Don Bosco</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-clinica">Clínica</span>
+        <span class="tag tag-ciudad">Panamá</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Parque Lefevre, Ciudad de Panamá</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:5129500">512-9500</a></div>
+        <div class="info-row"><span class="icon">🕐</span> Lun-Vie: 7:00 AM – 3:00 PM</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Medicina General</span>
+        <span class="servicio-tag">Ginecología</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Policlínica Don Bosco, Parque Lefevre, Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:5129500'">📞 Llamar</button>
+      </div>
+    </div>
+
+    <div class="centro-card" data-tipo="hospital" data-region="interior" data-name="Hospital de Chitré">
+      <div class="centro-header">
+        <span class="centro-name">Hospital de Chitré</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-hospital">Hospital</span>
+        <span class="tag tag-ciudad">Herrera</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Chitré, Herrera</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:9748332">974-8332</a></div>
+        <div class="info-row"><span class="icon">🕐</span> Lun-Vie: 7:00 AM – 3:00 PM</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Ginecología</span>
+        <span class="servicio-tag">Urgencias</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Hospital de Chitré, Herrera, Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:9748332'">📞 Llamar</button>
+      </div>
+    </div>
+
+    <div class="centro-card" data-tipo="hospital" data-region="interior" data-name="Hospital de Colón">
+      <div class="centro-header">
+        <span class="centro-name">Hospital de Colón</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-hospital">Hospital</span>
+        <span class="tag tag-ciudad">Colón</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Colón</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:4701800">470-1800</a></div>
+        <div class="info-row"><span class="icon">🕐</span> 24 horas</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Urgencias</span>
+        <span class="servicio-tag">Medicina General</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Hospital de Colón, Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:4701800'">📞 Llamar</button>
+      </div>
+    </div>
+
+    <div class="centro-card" data-tipo="clinica" data-region="panama" data-name="Clínica Hospital San Fernando">
+      <div class="centro-header">
+        <span class="centro-name">Clínica Hospital San Fernando</span>
+        <span class="pin-icon">📍</span>
+      </div>
+      <div class="tags">
+        <span class="tag tag-clinica">Clínica</span>
+        <span class="tag tag-ciudad">Panamá</span>
+        <span class="tag tag-mamo">Mamografía disponible</span>
+      </div>
+      <div class="centro-info">
+        <div class="info-row"><span class="icon">📍</span> Av. Ricardo J. Alfaro, Ciudad de Panamá</div>
+        <div class="info-row"><span class="icon">📞</span> <a href="tel:3056300">305-6300</a></div>
+        <div class="info-row"><span class="icon">🕐</span> Lun-Sáb: 7:00 AM – 6:00 PM</div>
+      </div>
+      <div class="servicios-label">Servicios:</div>
+      <div class="servicios">
+        <span class="servicio-tag">Mamografía</span>
+        <span class="servicio-tag">Oncología</span>
+        <span class="servicio-tag">Radiología</span>
+        <span class="servicio-tag">Ginecología</span>
+      </div>
+      <div class="centro-actions">
+        <button class="btn-dir" onclick="openMaps('Hospital San Fernando, Via Ricardo Alfaro, Panamá')">✈️ Cómo llegar</button>
+        <button class="btn-call" onclick="window.location='tel:3056300'">📞 Llamar</button>
+      </div>
+    </div>
+
+  </div>
+  <!-- /centrosList -->
+
+</div>
+
+<script>
+  let currentFilter = 'todos';
+
+  function setFilter(tipo, btn) {
+    currentFilter = tipo;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterCentros();
+  }
+
+  function filterCentros() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const cards = document.querySelectorAll('.centro-card');
+    let count = 0;
+
+    cards.forEach(card => {
+      const tipo = card.dataset.tipo;
+      const region = card.dataset.region;
+      const name = card.dataset.name.toLowerCase();
+
+      const matchFilter =
+        currentFilter === 'todos' ||
+        currentFilter === tipo ||
+        (currentFilter === 'panama' && region === 'panama') ||
+        (currentFilter === 'interior' && region === 'interior') ||
+        (currentFilter === 'gratuito' && card.innerHTML.includes('gratuito'));
+
+      const matchSearch = name.includes(query) || card.innerText.toLowerCase().includes(query);
+
+      if (matchFilter && matchSearch) {
+        card.style.display = '';
+        count++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    document.getElementById('resultCount').textContent = `Mostrando ${count} centro${count !== 1 ? 's' : ''}`;
+  }
+
+  function openMaps(query) {
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`, '_blank');
+  }
+</script>
+
+</body>
+</html>
