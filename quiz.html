@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathCare - Evaluación</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #f7d6e0, #e6ccff);
+  margin: 0;
+}
+
+/* NAVBAR */
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 20px;
+  color:white;
+  background:linear-gradient(90deg,#a06cd5,#c77dff);
+}
+
+/* BOTÓN VOLVER */
+.back-btn{
+  background:white;
+  border:none;
+  border-radius:10px;
+  padding:6px 12px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* QUIZ */
+.page-container {
+  max-width:600px;
+  margin:auto;
+  padding:20px;
+}
+
+.t-header {
+  background: linear-gradient(135deg,#C94BC7,#7B4BDA);
+  color:white;
+  text-align:center;
+  padding:24px;
+  border-radius:20px 20px 0 0;
+}
+
+.t-progress {
+  background:white;
+  padding:16px;
+}
+
+.t-card {
+  background:white;
+  margin:16px;
+  padding:20px;
+  border-radius:16px;
+}
+
+.t-option {
+  display:flex;
+  padding:12px;
+  border:1px solid #ddd;
+  border-radius:10px;
+  margin-bottom:10px;
+  cursor:pointer;
+}
+
+.t-buttons {
+  display:flex;
+  gap:10px;
+  margin:0 16px 16px;
+}
+
+.t-btn {
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  font-weight:600;
+  cursor:pointer;
+}
+
+.t-btn-next { background:#D91A96; color:white; }
+.t-btn-back { background:#eee; }
+
+/* NAVBAR INFERIOR */
+.nav-bottom {
+  position:fixed;
+  bottom:0;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  padding:10px;
+  background:white;
+}
+
+.nav-item {
+  font-size:12px;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="navbar">
+  <h2>PathCare</h2>
+  <button class="back-btn" onclick="window.location.href='app.html'">Volver</button>
+</div>
+
+<div class="page-container">
+
+<div class="t-header">
+<h1>Evaluación</h1>
+<p>Cáncer de mama</p>
+</div>
+
+<div class="t-card" id="card"></div>
+
+<div class="t-buttons">
+<button class="t-btn t-btn-back" onclick="prev()">Anterior</button>
+<button class="t-btn t-btn-next" onclick="next()">Siguiente</button>
+</div>
+
+</div>
+
+<!-- NAVBAR -->
+<div class="nav-bottom">
+<button class="nav-item" onclick="window.location.href='app.html'">Inicio</button>
+<button class="nav-item">Riesgo</button>
+<button class="nav-item" onclick="window.location.href='app.html#centros'">Centros</button>
+<button class="nav-item" onclick="window.location.href='app.html#perfil'">Perfil</button>
+</div>
+
+<script>
+const preguntas=[
+{t:"Edad",o:["<30","30-39","40-49","50+"]},
+{t:"Antecedentes",o:["No","Lejanos","Directos"]},
+{t:"Actividad física",o:["Regular","Poco","Nada"]}
+];
+
+let i=0;
+
+function render(){
+let p=preguntas[i];
+let html=`<h3>${p.t}</h3>`;
+p.o.forEach(op=>{
+html+=`<label class="t-option"><input type="radio">${op}</label>`;
+});
+card.innerHTML=html;
+}
+
+function next(){
+if(i<preguntas.length-1){i++;render();}
+else alert("Terminado");
+}
+
+function prev(){
+if(i>0){i--;render();}
+}
+
+render();
+</script>
+
+</body>
+</html>
